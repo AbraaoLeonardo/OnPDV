@@ -1,0 +1,33 @@
+default_install_hook_types: [pre-push]
+
+repos:
+  - repo: local
+    hooks:
+      - id: client-lint
+        name: client lint (oxlint)
+        entry: npm --prefix client run lint
+        language: system
+        files: ^client/
+        pass_filenames: false
+        stages: [pre-push]
+      - id: client-test
+        name: client test (vitest)
+        entry: npm --prefix client run test
+        language: system
+        files: ^client/
+        pass_filenames: false
+        stages: [pre-push]
+      - id: server-lint
+        name: server lint (golangci-lint)
+        entry: bash -c 'cd server && golangci-lint run ./...'
+        language: system
+        files: ^server/
+        pass_filenames: false
+        stages: [pre-push]
+      - id: server-test
+        name: server test (go test)
+        entry: bash -c 'cd server && go test ./...'
+        language: system
+        files: ^server/
+        pass_filenames: false
+        stages: [pre-push]
